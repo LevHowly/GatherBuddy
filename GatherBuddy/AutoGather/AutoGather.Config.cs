@@ -12,7 +12,7 @@ namespace GatherBuddy.AutoGather
         public Dictionary<uint, List<Vector3>> BlacklistedNodesByTerritoryId { get; set; } = [];
 
         public bool UseGivingLandOnCooldown { get; set; } = false;
-        public bool IgnoreGivingLandMinIntegrity { get; set; } = false;
+        public int GivingLandMinIntegrity { get; set; } = 6;
 
         public int TimedNodePrecog { get; set; } = 20;
         public bool DoGathering { get; set; } = true;

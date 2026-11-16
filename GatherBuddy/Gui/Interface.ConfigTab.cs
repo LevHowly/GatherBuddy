@@ -274,11 +274,18 @@ public partial class Interface
                 GatherBuddy.Config.AutoGatherConfig.UseGivingLandOnCooldown,
                 b => GatherBuddy.Config.AutoGatherConfig.UseGivingLandOnCooldown = b);
 
-        public static void DrawIgnoreGivingLandMinIntegrity()
-            => DrawCheckbox("Ignore minimum integrity when gathering crystals with The Giving Land",
-                "When the option above is enabled, allow The Giving Land on crystals even if the matched preset's minimum integrity is not met.",
-                GatherBuddy.Config.AutoGatherConfig.IgnoreGivingLandMinIntegrity,
-                b => GatherBuddy.Config.AutoGatherConfig.IgnoreGivingLandMinIntegrity = b);
+        public static void DrawGivingLandMinIntegrity()
+        {
+            var minimumIntegrity = GatherBuddy.Config.AutoGatherConfig.GivingLandMinIntegrity;
+            ImGui.SetNextItemWidth(150);
+            if (ImGui.SliderInt("Integrity needed for The Giving Land", ref minimumIntegrity, 4, 6))
+            {
+                GatherBuddy.Config.AutoGatherConfig.GivingLandMinIntegrity = Math.Clamp(minimumIntegrity, 4, 6);
+                GatherBuddy.Config.Save();
+            }
+
+            ImGuiUtil.HoverTooltip("When gathering crystals on cooldown, use The Giving Land on regular nodes with at least this much maximum integrity. Default: 6.");
+        }
 
         public static void DrawMountUpDistance()
         {
@@ -1505,7 +1512,7 @@ public partial class Interface
             new("Teleport to next timed item",                    ConfigFunctions.DrawTeleportToNextNodeBox),
             new("Go home when done Go home when idle",            ConfigFunctions.DrawGoHomeBox),
             new("Gather any crystals when The Giving Land is off cooldown", ConfigFunctions.DrawUseGivingLandOnCooldown),
-            new("Ignore minimum integrity for crystal Giving Land", ConfigFunctions.DrawIgnoreGivingLandMinIntegrity),
+            new("Integrity needed for The Giving Land", ConfigFunctions.DrawGivingLandMinIntegrity),
             new("Use skills for fallback items",                  ConfigFunctions.DrawUseSkillsForFallabckBox),
             new("Abandon nodes without needed items",             ConfigFunctions.DrawAbandonNodesBox),
             new("Always gather maps when available",              ConfigFunctions.DrawAlwaysMapsBox),
