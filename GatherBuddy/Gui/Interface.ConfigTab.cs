@@ -274,6 +274,12 @@ public partial class Interface
                 GatherBuddy.Config.AutoGatherConfig.UseGivingLandOnCooldown,
                 b => GatherBuddy.Config.AutoGatherConfig.UseGivingLandOnCooldown = b);
 
+        public static void DrawIgnoreGivingLandMinIntegrity()
+            => DrawCheckbox("Ignore minimum integrity when gathering crystals with The Giving Land",
+                "When the option above is enabled, allow The Giving Land on crystals even if the matched preset's minimum integrity is not met.",
+                GatherBuddy.Config.AutoGatherConfig.IgnoreGivingLandMinIntegrity,
+                b => GatherBuddy.Config.AutoGatherConfig.IgnoreGivingLandMinIntegrity = b);
+
         public static void DrawMountUpDistance()
         {
             ImGui.SetNextItemWidth(150);
@@ -1499,6 +1505,7 @@ public partial class Interface
             new("Teleport to next timed item",                    ConfigFunctions.DrawTeleportToNextNodeBox),
             new("Go home when done Go home when idle",            ConfigFunctions.DrawGoHomeBox),
             new("Gather any crystals when The Giving Land is off cooldown", ConfigFunctions.DrawUseGivingLandOnCooldown),
+            new("Ignore minimum integrity for crystal Giving Land", ConfigFunctions.DrawIgnoreGivingLandMinIntegrity),
             new("Use skills for fallback items",                  ConfigFunctions.DrawUseSkillsForFallabckBox),
             new("Abandon nodes without needed items",             ConfigFunctions.DrawAbandonNodesBox),
             new("Always gather maps when available",              ConfigFunctions.DrawAlwaysMapsBox),
@@ -1819,4 +1826,3 @@ public partial class Interface
             layout.Draw(entry);
     }
 }
-

@@ -77,10 +77,10 @@ namespace GatherBuddy.AutoGather
             return true;
         }
 
-        private bool ShouldUseGivingLand(ItemSlot slot, ConfigPreset config)
+        private bool ShouldUseGivingLand(ItemSlot slot, ConfigPreset config, bool ignoreMinimumIntegrity = false)
         {
             if (!CheckConditions(Actions.GivingLand, config.GatherableActions.GivingLand, slot.Item, slot,
-                    config.ChooseBestActionsAutomatically))
+                    config.ChooseBestActionsAutomatically, ignoreMinimumIntegrity))
                 return false;
             if (!IsGivingLandOffCooldown)
                 return false;
@@ -466,7 +466,9 @@ namespace GatherBuddy.AutoGather
              && desiredItem.NodeType == Enums.NodeType.Regular)
             {
                 var anyCrystal = GetAnyCrystalInNode();
-                return anyCrystal != null && ShouldUseGivingLand(anyCrystal, MatchConfigPreset(anyCrystal.Item));
+                return anyCrystal != null
+                    && ShouldUseGivingLand(anyCrystal, MatchConfigPreset(anyCrystal.Item),
+                        GatherBuddy.Config.AutoGatherConfig.IgnoreGivingLandMinIntegrity);
             }
 
             return false;
@@ -564,7 +566,7 @@ namespace GatherBuddy.AutoGather
         }
 
         private bool CheckConditions(Actions.BaseAction action, ConfigPreset.ActionConfig config, Gatherable item, ItemSlot slot,
-            bool autoMode = false)
+            bool autoMode = false, bool ignoreMinimumIntegrity = false)
         {
             if (GatheringWindowReader == null || Player.Object == null)
                 return false;
@@ -588,9 +590,10 @@ namespace GatherBuddy.AutoGather
             if (action.EffectType is Actions.EffectType.Integrity && GatheringWindowReader.IntegrityRemaining > Math.Min(2, GatheringWindowReader.IntegrityMax - 1))
                 return false;
             if (action.EffectType is not Actions.EffectType.Other and not Actions.EffectType.GatherChance && slot.IsRare)
-                    return false;
+                return false;
             if (config is ConfigPreset.ActionConfigIntegrity config2
-             && (!autoMode && config2.MinIntegrity > GatheringWindowReader.IntegrityMax || (config2.FirstStepOnly || autoMode) && GatheringWindowReader.Touched))
+             && (!autoMode && !ignoreMinimumIntegrity && config2.MinIntegrity > GatheringWindowReader.IntegrityMax
+                 || (config2.FirstStepOnly || autoMode) && GatheringWindowReader.Touched))
                 return false;
             if (config is ConfigPreset.ActionConfigBoon config3
              && (slot.BoonChance == -1 || !autoMode && (slot.BoonChance < config3.MinBoonChance || slot.BoonChance > config3.MaxBoonChance)))
